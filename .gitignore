@@ -1,3 +1,5 @@
 flask-app/.venv/
 __pycache__/
 .vscode/
+jmeter/tests/jmeter.log
+jmeter/tests/results/
