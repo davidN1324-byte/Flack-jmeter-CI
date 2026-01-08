@@ -1,0 +1,19 @@
+services:
+  flask:
+    build: ./flask-app
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+
+  jmeter:
+    build: ./jmeter
+    container_name: jmeter-runner
+    depends_on:
+      - flask
+    environment:
+      ENDPOINT: "fast"
+    volumes:
+      - ./jmeter/tests:/tests
+    working_dir: /tests
+    entrypoint: >
+      bash -c "mkdir -p results/report-${ENDPOINT} && jmeter -n -t endpoints.jmx -Jendpoint=${ENDPOINT} -l results/results-${ENDPOINT}.jtl -e -o results/report-${ENDPOINT}"
