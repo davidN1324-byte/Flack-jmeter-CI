@@ -1,0 +1,44 @@
+name: JMeter Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      endpoint:
+        description: "Which endpoint to test?"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - fast
+          - slow
+          - unstable
+          - all
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build services
+        run: docker compose build
+
+      - name: Run selected tests
+        run: |
+          if [ "${{ github.event.inputs.endpoint }}" = "all" ]; then
+            for ep in fast slow unstable; do
+              echo "Running tests for $ep"
+              ENDPOINT=$ep docker compose run --rm jmeter
+            done
+          else
+            echo "Running tests for ${{ github.event.inputs.endpoint }}"
+            ENDPOINT=${{ github.event.inputs.endpoint }} docker compose run --rm jmeter
+          fi
+
+      - name: Upload JMeter results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: jmeter/tests/results/
