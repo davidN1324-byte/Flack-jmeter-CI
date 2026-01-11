@@ -26,3 +26,12 @@ docker compose up --build
 
 > ✔ /fast, /slow, /unstable → 200 / 500
 > As expected → test passed.
+
+# 
+> ✔ # Functional Tests Low High
+> ✔ # Light Load Low Medium
+> ✔ # SLA Checks Low High
+> ✔ # HTML Reports Low High
+> ✔ # Matrix Pipeline Medium High
+> ✔ # Smoke Test Low High
+> ✔ # Automated Jobs Medium High
