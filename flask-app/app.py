@@ -54,5 +54,22 @@ def not_found(e):
     return {"error": "not found"}, 404
 
 
+@app.errorhandler(400)
+def bad_request(e):
+    return {"error": "bad request"}, 400
+
+
+@app.route("/validate")
+def validate():
+    limit = request.args.get("limit", type=int)
+    if limit is None or limit < 0:
+        return {"error": "invalid limit"}, 400
+    return {"limit": limit}, 200
+
+
+
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
