@@ -9,6 +9,7 @@ docker compose run --rm jmeter
 ```bash
 docker compose up --build
 ```
+> change "Server Name or IP" to: localhost
 
 # Results 
 > ✔ /unknown → 404
