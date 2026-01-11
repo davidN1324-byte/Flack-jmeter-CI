@@ -1,0 +1,25 @@
+name: JMeter Smoke Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    name: Smoke Tests
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker services
+        run: docker compose build
+
+      - name: Run smoke JMeter tests
+        run: TEST_FILE=smoke_test.jmx docker compose run --rm jmeter
+
+      - name: Upload JMeter results
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-results
+          path: jmeter/tests/results/
+  
