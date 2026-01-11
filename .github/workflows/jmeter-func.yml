@@ -1,0 +1,17 @@
+name: JMeter Functional Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  func-tests:
+    runs-on: ubuntu-latest
+    name: Functional Tests
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: TEST_FILE=func_test.jmx docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
+        with:
+          name: func-results
+          path: jmeter/tests/results/
