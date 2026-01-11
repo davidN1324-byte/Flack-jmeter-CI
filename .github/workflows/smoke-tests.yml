@@ -2,6 +2,8 @@ name: JMeter Smoke Tests
 
 on:
   workflow_dispatch:
+  schedule: 
+  - cron: "0 3 * * *"
 
 jobs:
   smoke-tests:
@@ -22,4 +24,3 @@ jobs:
         with:
           name: smoke-results
           path: jmeter/tests/results/
-  
