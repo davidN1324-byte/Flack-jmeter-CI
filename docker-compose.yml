@@ -16,4 +16,4 @@ services:
       - ./jmeter/tests:/tests
     working_dir: /tests
     entrypoint: >
-      bash -c "mkdir -p results/report-${ENDPOINT} && jmeter -n -t endpoints.jmx -Jendpoint=${ENDPOINT} -l results/results-${ENDPOINT}.jtl -e -o results/report-${ENDPOINT}"
+      bash -c "rm -rf results/* && mkdir -p results/report-${ENDPOINT} && jmeter -n -t endpoints.jmx -Jendpoint=${ENDPOINT} -l results/results-${ENDPOINT}.jtl -e -o results/report-${ENDPOINT}"
