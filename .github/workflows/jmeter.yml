@@ -14,6 +14,15 @@ on:
           - unstable
           - all
 
+      test_type:
+        description: "Which test file to run?"
+        required: true
+        default: "load"
+        type: choice
+        options:
+          - load
+          - func
+
 jobs:
 
   fast:
@@ -23,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker compose build
-      - run: ENDPOINT=fast docker compose run --rm jmeter
+      - run: ENDPOINT=fast TEST_FILE=${{ github.event.inputs.test_type }}.jmx docker compose run --rm jmeter
       - uses: actions/upload-artifact@v4
         with:
           name: jmeter-results-fast
@@ -36,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker compose build
-      - run: ENDPOINT=slow docker compose run --rm jmeter
+      - run: ENDPOINT=slow TEST_FILE=${{ github.event.inputs.test_type }}.jmx docker compose run --rm jmeter
       - uses: actions/upload-artifact@v4
         with:
           name: jmeter-results-slow
@@ -49,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker compose build
-      - run: ENDPOINT=unstable docker compose run --rm jmeter
+      - run: ENDPOINT=unstable TEST_FILE=${{ github.event.inputs.test_type }}.jmx docker compose run --rm jmeter
       - uses: actions/upload-artifact@v4
         with:
           name: jmeter-results-unstable
