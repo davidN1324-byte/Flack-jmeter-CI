@@ -17,14 +17,14 @@ def slow():
     time.sleep(1.5)  # имитация долгой операции
     return jsonify(
         endpoint="slow",
-        delay="1.5s",
+        delay="2.5s",
         status="ok"
     ), 200
 
 
 @app.route("/unstable")
 def unstable():
-    if random.random() < 0.3:  # ~30% ошибок
+    if random.random() < 0.4:  # ~30% ошибок
         return jsonify(
             endpoint="unstable",
             status="error"
