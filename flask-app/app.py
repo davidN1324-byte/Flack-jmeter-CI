@@ -41,8 +41,11 @@ def unstable():
     ), 200
 
 
-@app.route("/process", methods=["POST"])
+@app.route("/process", methods=["GET", "POST"])
 def process():
+    if request.method == "GET":
+        return {"info": "send POST JSON"}, 200
+
     data = request.get_json(silent=True)
     if not data:
         return {"error": "empty body"}, 400
@@ -67,8 +70,14 @@ def validate():
     return {"limit": limit}, 200
 
 
+@app.route("/empty")
+def empty():
+    return {"message": "empty ok"}, 200
 
 
+@app.route("/wrong-param")
+def wrong_param():
+    return {"error": "invalid"}, 400
 
 
 if __name__ == "__main__":
