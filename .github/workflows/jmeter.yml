@@ -15,31 +15,42 @@ on:
           - all
 
 jobs:
-  run-tests:
-    name: Run JMeter (${{ github.event.inputs.endpoint }})
+
+  fast:
+    if: ${{ github.event.inputs.endpoint == 'fast' || github.event.inputs.endpoint == 'all' }}
     runs-on: ubuntu-latest
-
+    name: Run JMeter (fast)
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Build Docker services
-        run: docker compose build
-
-      - name: Run selected tests
-        run: |
-          if [ "${{ github.event.inputs.endpoint }}" = "all" ]; then
-            for ep in fast slow unstable; do
-              echo "Running tests for $ep"
-              ENDPOINT=$ep docker compose run --rm jmeter
-            done
-          else
-            echo "Running tests for ${{ github.event.inputs.endpoint }}"
-            ENDPOINT=${{ github.event.inputs.endpoint }} docker compose run --rm jmeter
-          fi
-
-      - name: Upload JMeter results
-        uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: ENDPOINT=fast docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
         with:
-          name: jmeter-results-${{ github.event.inputs.endpoint }}
+          name: jmeter-results-fast
+          path: jmeter/tests/results/
+
+  slow:
+    if: ${{ github.event.inputs.endpoint == 'slow' || github.event.inputs.endpoint == 'all' }}
+    runs-on: ubuntu-latest
+    name: Run JMeter (slow)
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: ENDPOINT=slow docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results-slow
+          path: jmeter/tests/results/
+
+  unstable:
+    if: ${{ github.event.inputs.endpoint == 'unstable' || github.event.inputs.endpoint == 'all' }}
+    runs-on: ubuntu-latest
+    name: Run JMeter (unstable)
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: ENDPOINT=unstable docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results-unstable
           path: jmeter/tests/results/
