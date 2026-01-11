@@ -16,13 +16,14 @@ on:
 
 jobs:
   run-tests:
+    name: Run JMeter (${{ github.event.inputs.endpoint }})
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build services
+      - name: Build Docker services
         run: docker compose build
 
       - name: Run selected tests
@@ -40,5 +41,5 @@ jobs:
       - name: Upload JMeter results
         uses: actions/upload-artifact@v4
         with:
-          name: jmeter-results
+          name: jmeter-results-${{ github.event.inputs.endpoint }}
           path: jmeter/tests/results/
