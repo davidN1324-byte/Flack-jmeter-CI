@@ -20,8 +20,8 @@ on:
         default: "load"
         type: choice
         options:
-          - load
-          - func
+          - load_test
+          - func_test
 
 jobs:
 
