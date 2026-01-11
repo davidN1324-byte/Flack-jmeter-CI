@@ -1,0 +1,56 @@
+name: JMeter Load Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      endpoint:
+        description: "Which endpoint to test?"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - fast
+          - slow
+          - unstable
+          - all
+
+jobs:
+
+  fast:
+    if: ${{ github.event.inputs.endpoint == 'fast' || github.event.inputs.endpoint == 'all' }}
+    runs-on: ubuntu-latest
+    name: Load Test (fast)
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: ENDPOINT=fast TEST_FILE=load_test.jmx docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
+        with:
+          name: load-results-fast
+          path: jmeter/tests/results/
+
+  slow:
+    if: ${{ github.event.inputs.endpoint == 'slow' || github.event.inputs.endpoint == 'all' }}
+    runs-on: ubuntu-latest
+    name: Load Test (slow)
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: ENDPOINT=slow TEST_FILE=load_test.jmx docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
+        with:
+          name: load-results-slow
+          path: jmeter/tests/results/
+
+  unstable:
+    if: ${{ github.event.inputs.endpoint == 'unstable' || github.event.inputs.endpoint == 'all' }}
+    runs-on: ubuntu-latest
+    name: Load Test (unstable)
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - run: ENDPOINT=unstable TEST_FILE=load_test.jmx docker compose run --rm jmeter
+      - uses: actions/upload-artifact@v4
+        with:
+          name: load-results-unstable
+          path: jmeter/tests/results/
